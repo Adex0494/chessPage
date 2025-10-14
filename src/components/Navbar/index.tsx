@@ -1,31 +1,36 @@
+// src/components/Navbar/Navbar.tsx
 import React, { useState, useRef } from 'react'
 import {
   AppBar,
-  Toolbar,
-  Typography,
   Button,
   Menu,
   MenuItem,
-  Box,
   IconButton,
+  Box,
 } from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
+import {
+  StyledToolbar,
+  Logo,
+  MenuContainer,
+  MobileMenuButton,
+  RightLogos,
+} from './Navbar.styles'
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuType, setMenuType] = useState<string>('')
+  const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
+    null
+  )
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, type: string) => {
-    setAnchorEl(event.currentTarget)
+  const handleOpenMenu = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLButtonElement>,
+    type: string
+  ) => {
+    setAnchorEl(event.currentTarget as HTMLElement)
     setMenuType(type)
-  }
-
-  const handleKeyboardOpen = (event: React.KeyboardEvent<HTMLButtonElement>, type: string) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      setAnchorEl(event.currentTarget)
-      setMenuType(type)
-    }
   }
 
   const handleCloseMenu = () => {
@@ -36,11 +41,18 @@ function Navbar() {
   const handleKeyClose = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
       handleCloseMenu()
-      // Return focus to button
       if (menuType && buttonRefs.current[menuType]) {
         buttonRefs.current[menuType]?.focus()
       }
     }
+  }
+
+  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMobileMenuAnchor(event.currentTarget)
+  }
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuAnchor(null)
   }
 
   const menuItems: Record<string, string[]> = {
@@ -52,22 +64,13 @@ function Navbar() {
   return (
     <AppBar
       position="static"
-      sx={{
-        backgroundColor: '#111',
-        left: 0,
-        right: 0,
-        width: '100%',
-        boxShadow: 'none',
-      }}
+      sx={{ backgroundColor: '#111', boxShadow: 'none' }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        {/* Logo AAS */}
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          LOGO AAS
-        </Typography>
+      <StyledToolbar>
+        <Logo>LOGO AAS</Logo>
 
-        {/* Menús centrales */}
-        <Box sx={{ display: 'flex', gap: 3 }}>
+        {/* Desktop Menu */}
+        <MenuContainer>
           {['nosotros', 'torneos', 'aprende', 'contacto'].map((item) => (
             <Box
               key={item}
@@ -86,12 +89,13 @@ function Navbar() {
                 aria-haspopup="true"
                 aria-expanded={menuType === item ? 'true' : undefined}
                 aria-label={`${item} menu`}
-                onKeyDown={(e) => handleKeyboardOpen(e, item)}
+                onKeyDown={(e) =>
+                  (e.key === 'Enter' || e.key === ' ') && handleOpenMenu(e, item)
+                }
               >
                 {item.charAt(0).toUpperCase() + item.slice(1)}
               </Button>
 
-              {/* Submenu */}
               {menuItems[item] && (
                 <Menu
                   id={`${item}-menu`}
@@ -106,6 +110,11 @@ function Navbar() {
                       onKeyDown: handleKeyClose,
                       sx: { mt: 0.5 },
                     },
+                    list: {
+                      role: 'menu',
+                      'aria-labelledby': `${item}-button`,
+                      autoFocusItem: true,
+                    },
                   }}
                   sx={{
                     pointerEvents: 'none',
@@ -114,19 +123,9 @@ function Navbar() {
                       marginTop: '4px',
                     },
                   }}
-                  MenuListProps={{
-                    role: 'menu',
-                    'aria-labelledby': `${item}-button`,
-                    autoFocusItem: true,
-                  }}
                 >
-                  {menuItems[item].map((subItem, idx) => (
-                    <MenuItem
-                      key={subItem}
-                      onClick={handleCloseMenu}
-                      role="menuitem"
-                      tabIndex={idx === 0 ? 0 : -1}
-                    >
+                  {menuItems[item].map((subItem) => (
+                    <MenuItem key={subItem} onClick={handleCloseMenu}>
                       {subItem}
                     </MenuItem>
                   ))}
@@ -134,14 +133,31 @@ function Navbar() {
               )}
             </Box>
           ))}
-        </Box>
+        </MenuContainer>
+
+        {/* Mobile Menu */}
+        <MobileMenuButton onClick={handleMobileMenuOpen}>
+          <MenuIcon sx={{color: 'white'}}/>
+        </MobileMenuButton>
+        <Menu
+          anchorEl={mobileMenuAnchor}
+          open={Boolean(mobileMenuAnchor)}
+          onClose={handleMobileMenuClose}
+        >
+          {Object.keys(menuItems).map((key) => (
+            <MenuItem key={key} onClick={handleMobileMenuClose}>
+              {key.charAt(0).toUpperCase() + key.slice(1)}
+            </MenuItem>
+          ))}
+          <MenuItem onClick={handleMobileMenuClose}>Contacto</MenuItem>
+        </Menu>
 
         {/* Logos derecha */}
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <RightLogos>
           <IconButton sx={{ color: 'white' }}>Logo UDESA</IconButton>
           <IconButton sx={{ color: 'white' }}>Logo FDA</IconButton>
-        </Box>
-      </Toolbar>
+        </RightLogos>
+      </StyledToolbar>
     </AppBar>
   )
 }
