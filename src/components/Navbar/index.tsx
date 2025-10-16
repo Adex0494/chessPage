@@ -15,7 +15,7 @@ import {
   MenuContainer,
   MobileMenuButton,
   RightLogos,
-} from './Navbar.styles'
+} from './Navbar.styled'
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
