@@ -1,4 +1,3 @@
-import React from 'react'
 import { HeroContainer, HeroContent, HeroTitle, HeroSubtitle, HeroButton } from './Hero.styled'
 // import { Button } from '@mui/material'
 
