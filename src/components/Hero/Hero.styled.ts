@@ -6,22 +6,35 @@ export const HeroContainer = styled(Box)`
   align-items: center;
   justify-content: center;
   text-align: center;
-  height: 90vh;
-  background-image: url('/your-background.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  height: 100vh;
+  position: relative;
   color: white;
 
-  /* dark overlay */
-  position: relative;
+  background-image: url('/hero-bg.png');
+  background-size: cover;
+  background-position: center top; /* show top part */
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* optional: nice effect */
+
+  /* Gradient overlay so text is readable */
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(
+      rgba(0, 0, 0, 0.4) 10%,  /* slightly darker at top */
+      rgba(0, 0, 0, 0.6) 70%
+    );
+    z-index: 0;
   }
-`
+
+  /* Keep content visible on top of overlay */
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+
+`;
 
 export const HeroContent = styled(Box)`
   position: relative;

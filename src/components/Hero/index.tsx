@@ -1,4 +1,4 @@
-import { HeroContainer, HeroContent, HeroTitle, HeroSubtitle, HeroButton } from './Hero.styled'
+import { HeroContainer, HeroContent, HeroTitle, HeroSubtitle } from './Hero.styled'
 // import { Button } from '@mui/material'
 
 function Hero() {
@@ -7,7 +7,7 @@ function Hero() {
       <HeroContent>
         <HeroTitle>Bienvenido a la Asociación de Ajedrez de Santiago</HeroTitle>
         <HeroSubtitle>Promoviendo el ajedrez en nuestra comunidad</HeroSubtitle>
-        <HeroButton variant="contained">Ver Torneos</HeroButton>
+        {/* <HeroButton variant="contained">Ver Torneos</HeroButton> */}
       </HeroContent>
     </HeroContainer>
   )
