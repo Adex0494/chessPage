@@ -1,13 +1,6 @@
 // src/components/Navbar/Navbar.tsx
 import React, { useState, useRef } from 'react'
-import {
-  AppBar,
-  Button,
-  Menu,
-  MenuItem,
-  IconButton,
-  Box,
-} from '@mui/material'
+import { AppBar, Button, Menu, MenuItem, IconButton, Box } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import {
   StyledToolbar,
@@ -16,6 +9,7 @@ import {
   MobileMenuButton,
   RightLogos,
 } from './Navbar.styled'
+import { Link } from 'react-router-dom'
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -26,7 +20,9 @@ function Navbar() {
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
   const handleOpenMenu = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLButtonElement>,
+    event:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLButtonElement>,
     type: string
   ) => {
     setAnchorEl(event.currentTarget as HTMLElement)
@@ -63,11 +59,19 @@ function Navbar() {
 
   return (
     <AppBar
-      position="static"
+      position='static'
       sx={{ backgroundColor: '#111', boxShadow: 'none' }}
     >
       <StyledToolbar>
-        <Logo>LOGO AAS</Logo>
+        <Link
+          to='/'
+          style={{
+            textDecoration: 'none',
+            color: 'inherit',
+          }}
+        >
+          <Logo>LOGO AAS</Logo>
+        </Link>
 
         {/* Desktop Menu */}
         <MenuContainer>
@@ -86,11 +90,12 @@ function Navbar() {
                 }}
                 sx={{ color: 'white' }}
                 aria-controls={menuType === item ? `${item}-menu` : undefined}
-                aria-haspopup="true"
+                aria-haspopup='true'
                 aria-expanded={menuType === item ? 'true' : undefined}
                 aria-label={`${item} menu`}
                 onKeyDown={(e) =>
-                  (e.key === 'Enter' || e.key === ' ') && handleOpenMenu(e, item)
+                  (e.key === 'Enter' || e.key === ' ') &&
+                  handleOpenMenu(e, item)
                 }
               >
                 {item.charAt(0).toUpperCase() + item.slice(1)}
@@ -125,7 +130,12 @@ function Navbar() {
                   }}
                 >
                   {menuItems[item].map((subItem) => (
-                    <MenuItem key={subItem} onClick={handleCloseMenu}>
+                    <MenuItem
+                      key={subItem}
+                      component={Link}
+                      to={`/${subItem.toLowerCase()}`}
+                      onClick={handleCloseMenu}
+                    >
                       {subItem}
                     </MenuItem>
                   ))}
@@ -137,7 +147,7 @@ function Navbar() {
 
         {/* Mobile Menu */}
         <MobileMenuButton onClick={handleMobileMenuOpen}>
-          <MenuIcon sx={{color: 'white'}}/>
+          <MenuIcon sx={{ color: 'white' }} />
         </MobileMenuButton>
         <Menu
           anchorEl={mobileMenuAnchor}
