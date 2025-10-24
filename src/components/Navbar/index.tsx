@@ -10,6 +10,7 @@ import {
   RightLogos,
 } from './Navbar.styled'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -18,6 +19,7 @@ function Navbar() {
     null
   )
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({})
+  const navigate = useNavigate()
 
   const handleOpenMenu = (
     event:
@@ -93,10 +95,20 @@ function Navbar() {
                 aria-haspopup='true'
                 aria-expanded={menuType === item ? 'true' : undefined}
                 aria-label={`${item} menu`}
-                onKeyDown={(e) =>
-                  (e.key === 'Enter' || e.key === ' ') &&
-                  handleOpenMenu(e, item)
-                }
+                onClick={() => {
+                  if (item === 'contacto') {
+                    navigate('/contacto')
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    if (item === 'contacto') {
+                      e.preventDefault()
+                      navigate('/contacto')
+                    }
+                    handleOpenMenu(e, item)
+                  }
+                }}
               >
                 {item.charAt(0).toUpperCase() + item.slice(1)}
               </Button>
